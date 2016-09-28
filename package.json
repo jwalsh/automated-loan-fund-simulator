@@ -1,0 +1,25 @@
+{
+  "name": "@jwalsh/automated-legal-entity",
+  "version": "0.0.1",
+  "description": "Simulator for Agents in an Automated Legal Entity",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jwalsh/ael-simulator.git"
+  },
+  "keywords": [
+    "markov",
+    "simulator",
+    "law",
+    "legal"
+  ],
+  "author": "Jason Walsh <j@wal.sh>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jwalsh/ael-simulator/issues"
+  },
+  "homepage": "https://github.com/jwalsh/ael-simulator#readme"
+}
