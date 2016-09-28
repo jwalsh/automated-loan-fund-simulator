@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/jwalsh/ael-simulator/issues"
   },
-  "homepage": "https://github.com/jwalsh/ael-simulator#readme"
+  "homepage": "https://github.com/jwalsh/ael-simulator#readme",
+  "dependencies": {
+    "@jwalsh/stochastic": "^0.1.3"
+  }
 }
