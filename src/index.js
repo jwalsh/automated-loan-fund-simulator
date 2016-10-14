@@ -1,3 +1,4 @@
+// Revolving Loan Fund
 // Automated Legal Entity
 // Nomenclature follows Savings Circles
 // Nomenclature reflects Revolving Loan Funds
@@ -5,6 +6,22 @@
 
 var stoch = require('@jwalsh/stochastic');
 var faker = require('faker');
+
+// Savings Circle: Community Bank
+var app = {
+  bank: {
+    name: 'DRWB', // 'Banqo de la Pam'
+    president: { },
+    treasurer: { },
+    type: 'MFI' // define types that affect use of attributes
+  },
+  applications: [],
+  open: [],
+  closed: []
+};
+
+// Identity
+// oauth impl
 
 // Data store
 var ledger = 'ledger/';  // GitHub
@@ -17,13 +34,39 @@ var paypal = process.env.ALE_PAYPAL_KEY;
 var paypalSecret = process.env.ALE_PAYPAL_KEY;
 
 var User = function() {
+  // this.id =
   this.name = faker.name.findName();
+  // pull from faker
+  this.gender = Math.random() > .5 ? 'female' : 'male';
   this.creditScore = Math.ceil(Math.random() * 100);
   // this.created = (new Date()).getTime();
+  // Possible derived from consistent location and time
   this.verifiedEmployment = Math.random() > .8 ? true : false;
   this.contractedCell = Math.random() > .2 ? true : false;
+  this.loanAmount = Math.floor(Math.random() * 10000);
+  // this.topUpHistory = stoch.brown();
+  // Maintained area of non-owned but maintained land control
+  this.landTitleProxyVerified = Math.random() > .8 ? true : false;
+  // this.debtHistory = stoch.brown(1.0, -0.1, +0.1, 100, true); // Test
   this.existingDebt = Math.floor(Math.random() * 10000);
+  this.existingCredit = Math.floor(Math.random() * 10000);
+  // Village Savings: fair trade certified
+  this.existingSavings = Math.floor(Math.random() * 10000);
+  // TODO: Convert to time series
+  this.flowCert = {
+    farmed: 0, // harvested in kg
+    sold: 0,
+    got: 0
+  };
+  // property rights vary by gender and location; assume to be land (Latin America and Africa)
+  this.collateral = 0;
+  // Example: plow
+  this.moveableProperty = 0;
+  this.warehoused = 0;
+  this._debtCreditRatio = this.existingDebt / this.existingCredit;
+  // this._locationHistory = [];
   // console.log(this);
+  // this.payments = stoch.brown(1.0, -0.1, +0.1, 100, true); // Test
 };
 
 
@@ -42,12 +85,16 @@ var scoreCredit = function(user) {
   console.log('MIN_SCORE', MIN_SCORE,  'marketImpact', marketImpact, 'employmentImpact', employmentImpact);
   var rate = loanRates(user.creditScore);
   if (user.creditScore > scoreMin) {
-    console.log('accept loan', 'score', user.creditScore, 'at ', rate, scoreMin);
+    console.log('accept loan', 'score',  user.creditScore, 'of', user.loanAmount,'at', rate + '%' , 'scoreMin', scoreMin);
   } else {
-    console.log('reject loan', 'score', user.creditScore, scoreMin);
+    console.log('reject loan', 'score', user.creditScore, 'scoreMin', scoreMin);
   }
+  console.log('--------------------------------------');
+
 };
 
+var accepted = 0;
+var rejected = 0;
 var users = [];
 for (var i = 0; i < 10; i++) {
   var user = new User();
