@@ -4,16 +4,51 @@
 // Nomenclature reflects Revolving Loan Funds
 // http://energy.gov/eere/slsc/revolving-loan-funds
 
-var stoch = require('@jwalsh/stochastic');
-var faker = require('faker');
+import stoch from '@jwalsh/stochastic';
+import faker from 'faker';
+import  sample from 'lodash.sample';
+import { createStore } from 'redux';
+
+
+// gender
+// creditScore
+// verifiedEmployment
+// contractedCell
+// landTitleProxyVerified
+// existingDebt
+// existingCredit
+// existingSavings
+// flowCert.farmed
+// flowCert.sold
+// flowCert.got
+// collateral
+// moveableProperty
+// warehoused
+
+// Locations that require different risk and information models
+const locations = [
+  {
+    name: 'MIT',
+    creditAttributes: ['creditScore', 'contractedCell', 'collateral', 'existingDebt', 'existingCredit']
+  },
+  // http://blogs.worldbank.org/psd/how-3-banks-emerging-economies-are-banking-women
+  {
+    name: 'Dominican Republic',
+    creditAttributes: ['gender', 'verifiedEmployment', 'contractedCell', 'landTitleProxyVerified']
+  },
+  {
+    name: 'India',
+    creditAttributes: ['creditScore', 'verifiedEmployment']
+  },
+
+];
 
 // Savings Circle: Community Bank
-var app = {
+let app = {
   bank: {
-    name: 'DRWB', // 'Banqo de la Pam'
-    president: { },
-    treasurer: { },
-    type: 'MFI' // define types that affect use of attributes
+    president: faker.name.findName(),
+    treasurer: faker.name.findName(),
+    location: sample(locations) // define types that affect use of attributes
   },
   applications: [],
   open: [],
@@ -27,11 +62,14 @@ var app = {
 var ledger = 'ledger/';  // GitHub
 
 // Model and Configuration
-var company = process.env.ALE_COMPANY;
-var account = process.env.ALE_LOAN_ACCESS_KEY;
+app.bank.name = process.env.ALE_COMPANY || faker.company.companyName() + ' Bank';
+app.bank.account = process.env.ALE_LOAN_ACCESS_KEY || faker.finance.account();
+
 var accountSecret = process.env.ALE_LOAN_ACCESS_SECRET;
 var paypal = process.env.ALE_PAYPAL_KEY;
 var paypalSecret = process.env.ALE_PAYPAL_KEY;
+
+var users = [];
 
 var User = function() {
   // this.id =
@@ -67,8 +105,13 @@ var User = function() {
   // this._locationHistory = [];
   // console.log(this);
   // this.payments = stoch.brown(1.0, -0.1, +0.1, 100, true); // Test
+  // console.log(this);
 };
 
+// User + app.Bank
+var requestLoan = function(amount) {
+
+};
 
 var loanRates = function(creditScore) {
   return 5 +  12 * (100 - parseInt(creditScore)) / 100;
@@ -85,9 +128,9 @@ var scoreCredit = function(user) {
   console.log('MIN_SCORE', MIN_SCORE,  'marketImpact', marketImpact, 'employmentImpact', employmentImpact);
   var rate = loanRates(user.creditScore);
   if (user.creditScore > scoreMin) {
-    console.log('accept loan', 'score',  user.creditScore, 'of', user.loanAmount,'at', rate + '%' , 'scoreMin', scoreMin);
+    console.log('accepted', 'score',  user.creditScore, 'of', user.loanAmount,'at', rate + '%' , 'scoreMin', scoreMin);
   } else {
-    console.log('reject loan', 'score', user.creditScore, 'scoreMin', scoreMin);
+    console.log('rejected', 'score', user.creditScore, 'scoreMin', scoreMin);
   }
   console.log('--------------------------------------');
 
@@ -95,12 +138,46 @@ var scoreCredit = function(user) {
 
 var accepted = 0;
 var rejected = 0;
-var users = [];
-for (var i = 0; i < 10; i++) {
+
+for (var i = 0; i < 100; i++) {
   var user = new User();
-  console.log(user);
-  scoreCredit(user);
+  // console.log(user);
+  users.push(user);
+  // scoreCredit(user);
 }
+
+// A day passes every 2 seconds
+var appMonths = 3;  // months
+var simulationMinutes = 3; // minutes
+var appStart = (new Date()).getTime();
+var appMonthsMs = 60 * 60 * 24 * 3 * appMonths;
+console.log(appMonths, 'months;', appMonthsMs, 'duration');
+var appEvents = stoch.poissP(1, appMonthsMs, true);
+// console.log(appEvents);
+
+// Create a time simulation
+console.log('Starting Automated Loan Funds Simulation');
+console.log('Application:', app);
+console.log('Population:', users.length);
+console.log('Duration (months):', appMonths);
+
+setInterval(function() {
+
+  // Pick a new random time
+  // Pick a new random event
+  var diff = appEvents[0] * 1000;
+  //  console.log(diff);
+  if (diff < (new Date()).getTime() - appStart) {
+    var e = Math.floor(appEvents.shift());
+    var action = {};
+
+    if (Math.random() < .5) {
+      action = users.shift();
+      scoreCredit(user);
+    }
+    console.log('Event:', e, '(seconds)', action );
+  }
+}, 100);
 
 // s/PRESIDENT/COMPANY
 var events = [
