@@ -4,7 +4,8 @@
   "description": "Simulator for Agents in an Automated Legal Entity",
   "main": "src/index.js",
   "scripts": {
-    "test": "test/index.js"
+    "start": "./node_modules/.bin/babel-node src/index.js",
+    "test": "node test/index.js"
   },
   "repository": {
     "type": "git",

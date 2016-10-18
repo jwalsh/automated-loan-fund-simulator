@@ -39,6 +39,10 @@ const locations = [
     name: 'India',
     creditAttributes: ['creditScore', 'verifiedEmployment']
   },
+  {
+    name: 'Kenya',
+    creditAttributes: ['creditScore', 'verifiedEmployment']
+  }
 
 ];
 
@@ -81,6 +85,8 @@ var User = function() {
   this.verifiedEmployment = Math.random() > .8 ? true : false;
   this.contractedCell = Math.random() > .2 ? true : false;
   this.loanAmount = Math.floor(Math.random() * 10000);
+  // what incentives the user or the higher score would reduce default risk
+  // this.motivation = ['social', 'credit'];
   // this.topUpHistory = stoch.brown();
   // Maintained area of non-owned but maintained land control
   this.landTitleProxyVerified = Math.random() > .8 ? true : false;
@@ -131,7 +137,7 @@ var scoreCredit = function(user) {
     console.log('accepted', 'score',  user.creditScore, 'of', user.loanAmount,'at', rate + '%' , 'scoreMin', scoreMin);
     var terms = {
       user: user,
-      amount: user.amount,
+      amount: user.loanAmount,
       rate: rate,
       _scoreMin: scoreMin,
       created: (new Date()).getTime()
@@ -170,6 +176,7 @@ console.log('Application:', app);
 console.log('Population:', users.length);
 console.log('Duration (months):', appMonths);
 
+// Loan Applications
 setInterval(function() {
 
   // Pick a new random time
@@ -189,6 +196,15 @@ setInterval(function() {
   }
 }, 100);
 
+setInterval(function() {
+  var loan = sample(app.open);
+  if (loan) {
+    console.log('Event:', '<', loan.user.name, loan.amount);
+    if (loan.amount > 0) {
+      loan.amount -= 100;;
+    }
+  }
+}, 1000);
 // s/PRESIDENT/COMPANY
 var events = [
   { e: 'COMPANY_INC_REQUEST' },
@@ -259,11 +275,11 @@ var forms = {
     amount: new Number(),
     term_days: new Number()
   }
-}
+};
 // console.log(forms);
 
 var contract = {
   LOAN_APPLICATION:  function(template) { return template.name === 'Sally Smith' && template.amount < 5.5; },
   LOAN_REPAYMENT: function(template) { return }
-}
+};
 // console.log(contract);
