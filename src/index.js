@@ -9,7 +9,6 @@ import faker from 'faker';
 import  sample from 'lodash.sample';
 import { createStore } from 'redux';
 
-
 // gender
 // creditScore
 // verifiedEmployment
@@ -70,7 +69,7 @@ var paypal = process.env.ALE_PAYPAL_KEY;
 var paypalSecret = process.env.ALE_PAYPAL_KEY;
 
 var users = [];
-
+// trusts
 var User = function() {
   // this.id =
   this.name = faker.name.findName();
@@ -96,6 +95,7 @@ var User = function() {
     sold: 0,
     got: 0
   };
+  this.trusts = [];
   // property rights vary by gender and location; assume to be land (Latin America and Africa)
   this.collateral = 0;
   // Example: plow
@@ -129,9 +129,18 @@ var scoreCredit = function(user) {
   var rate = loanRates(user.creditScore);
   if (user.creditScore > scoreMin) {
     console.log('accepted', 'score',  user.creditScore, 'of', user.loanAmount,'at', rate + '%' , 'scoreMin', scoreMin);
+    var terms = {
+      user: user,
+      amount: user.amount,
+      rate: rate,
+      _scoreMin: scoreMin,
+      created: (new Date()).getTime()
+    };
+    app.open.push(terms);
   } else {
     console.log('rejected', 'score', user.creditScore, 'scoreMin', scoreMin);
   }
+  console.log('Open loans:', app.open.length);
   console.log('--------------------------------------');
 
 };
@@ -173,9 +182,10 @@ setInterval(function() {
 
     if (Math.random() < .5) {
       action = users.shift();
-      scoreCredit(user);
+      scoreCredit(action);
+      console.log('Event:', e, '(seconds)', action );
     }
-    console.log('Event:', e, '(seconds)', action );
+
   }
 }, 100);
 
