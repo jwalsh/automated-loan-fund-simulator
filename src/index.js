@@ -49,13 +49,18 @@ const locations = [
 // Savings Circle: Community Bank
 let app = {
   bank: {
+    reputation: 50, // board confidence
     president: faker.name.findName(),
     treasurer: faker.name.findName(),
     location: sample(locations) // define types that affect use of attributes
   },
+  balance: 100000,
   applications: [],
   open: [],
-  closed: []
+  closed: [], // completed, collections
+  inDefault: [],
+  recovery: [], // repo, lien
+  defaulted: []
 };
 
 // Identity
@@ -66,29 +71,93 @@ var ledger = 'ledger/';  // GitHub
 
 // Model and Configuration
 app.bank.name = process.env.ALE_COMPANY || faker.company.companyName() + ' Bank';
-app.bank.account = process.env.ALE_LOAN_ACCESS_KEY || faker.finance.account();
+app.bank.taxid = process.env.ALE_LOAN_ACCESS_KEY || faker.finance.account();
 
 var accountSecret = process.env.ALE_LOAN_ACCESS_SECRET;
 var paypal = process.env.ALE_PAYPAL_KEY;
 var paypalSecret = process.env.ALE_PAYPAL_KEY;
 
 var users = [];
-// trusts
+
+
+// When a loan is in default (in days)
+var defaultingThresholds = {
+  a: 30,
+  b: 60,
+  c: 90
+};
+
+var notificationStrategies = [
+  {
+    name: 'txt'
+  },
+  {
+    name: 'credit-score'
+  },
+  {
+    name: 'call'
+  }
+];
+
+var recoveryStrategies = [
+  {
+    name: 'txt'
+  },
+  {
+    name: 'e-mail'
+  },
+  {
+    name: 'mail'
+  },
+  {
+    name: 'call'
+  },
+  {
+    name: 'in-person'
+  }
+];
+
+// Nature of the loan request
+var loanSegments = [
+  {
+    type: 'agriculture',
+    rate: 5
+
+  },
+  {
+    type: 'health',
+    rate: 16
+
+  },
+  {
+    type: 'hurricane'
+  }
+];
+
+
+// Origination
 var User = function() {
-  // this.id =
-  this.name = faker.name.findName();
+  // Core Bankable: Regulatory criteria (Banks / Credit Unions)
+  this.identity = {
+    name: faker.name.findName(),
+    govtid: Math.floor(Math.random() * 10000000)
+  };
+
+  this.address =  faker.address.street;
+
+  // Social
+  this.references = [];
+
+  // Unbankable: (NGO, Non-Profit)
+  // Parameters for risk assessment
   // pull from faker
-  this.gender = Math.random() > .5 ? 'female' : 'male';
+  this.blacklisted = false;
+
   this.creditScore = Math.ceil(Math.random() * 100);
   // this.created = (new Date()).getTime();
   // Possible derived from consistent location and time
   this.verifiedEmployment = Math.random() > .8 ? true : false;
   this.contractedCell = Math.random() > .2 ? true : false;
-  this.loanAmount = Math.floor(Math.random() * 10000);
-  // what incentives the user or the higher score would reduce default risk
-  // this.motivation = ['social', 'credit'];
-  // this.topUpHistory = stoch.brown();
-  // Maintained area of non-owned but maintained land control
   this.landTitleProxyVerified = Math.random() > .8 ? true : false;
   // this.debtHistory = stoch.brown(1.0, -0.1, +0.1, 100, true); // Test
   this.existingDebt = Math.floor(Math.random() * 10000);
@@ -101,7 +170,7 @@ var User = function() {
     sold: 0,
     got: 0
   };
-  this.trusts = [];
+
   // property rights vary by gender and location; assume to be land (Latin America and Africa)
   this.collateral = 0;
   // Example: plow
@@ -109,9 +178,28 @@ var User = function() {
   this.warehoused = 0;
   this._debtCreditRatio = this.existingDebt / this.existingCredit;
   // this._locationHistory = [];
+
+  this.paymentsHistory = stoch.brown(1.0, -0.1, +0.1, 100, true).slice(1,10);
   // console.log(this);
-  // this.payments = stoch.brown(1.0, -0.1, +0.1, 100, true); // Test
-  // console.log(this);
+
+  // Loan
+  this.loanAmount = Math.floor(Math.random() * 10000);
+
+  // Methods
+  this.repay = function() {
+
+  };
+
+  // what incentives the user or the higher score would reduce default risk
+  // this.motivation = ['social', 'credit'];
+  // this.topUpHistory = stoch.brown();
+  // Maintained area of non-owned but maintained land control
+
+  // Discrimination
+  this.male = Math.random() > .5 ? true : false;
+  this.christian = Math.random() > .3 ? true : false;
+  this.medical = Math.random() > .1 ? false : true;
+  this.age = Math.ceil(Math.random() * 100);
 };
 
 // User + app.Bank
@@ -124,6 +212,9 @@ var loanRates = function(creditScore) {
 };
 
 var scoreCredit = function(user) {
+  if (!user || user.creditScrore) {
+    return;
+  }
   console.log('scoring credit', user.creditScore);
   var MIN_SCORE = 20;
   // move to 0
@@ -148,11 +239,8 @@ var scoreCredit = function(user) {
   }
   console.log('Open loans:', app.open.length);
   console.log('--------------------------------------');
-
 };
 
-var accepted = 0;
-var rejected = 0;
 
 for (var i = 0; i < 100; i++) {
   var user = new User();
@@ -190,21 +278,40 @@ setInterval(function() {
     if (Math.random() < .5) {
       action = users.shift();
       scoreCredit(action);
-      console.log('Event:', e, '(seconds)', action );
+      console.log('Originization:', e, '(seconds)', action );
     }
 
   }
 }, 100);
 
+// Disbursement
+setInterval(function() {
+  console.log('Disbursement:', 'Payment');
+}, 1000);
+
+// Repayment
 setInterval(function() {
   var loan = sample(app.open);
   if (loan) {
-    console.log('Event:', '<', loan.user.name, loan.amount);
+    console.log('Collection:', 'Payment', loan.user.name, loan.amount);
     if (loan.amount > 0) {
       loan.amount -= 100;;
     }
   }
 }, 1000);
+
+// Defaulted
+setInterval(function() {
+  var loan = sample(app.open);
+  if (loan) {
+    console.log('Recovery:', 'Check defaults', loan.user.name, loan.amount);
+    if (loan.amount > 0) {
+      loan.amount -= 100;;
+    }
+  }
+}, 1000);
+
+
 // s/PRESIDENT/COMPANY
 var events = [
   { e: 'COMPANY_INC_REQUEST' },
