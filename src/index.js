@@ -4,7 +4,7 @@
 // Nomenclature reflects Revolving Loan Funds
 // http://energy.gov/eere/slsc/revolving-loan-funds
 
-import stoch from '@jwalsh/stochastic';
+import * as stoch from '@jwalsh/stochastic';
 import faker from 'faker';
 import  sample from 'lodash.sample';
 import { createStore } from 'redux';
@@ -178,6 +178,8 @@ var User = function() {
   this.warehoused = 0;
   this._debtCreditRatio = this.existingDebt / this.existingCredit;
   // this._locationHistory = [];
+
+  this.publicKey = 'TODO';
 
   this.paymentsHistory = stoch.brown(1.0, -0.1, +0.1, 100, true).slice(1,10);
   // console.log(this);

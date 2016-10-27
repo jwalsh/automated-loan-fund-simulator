@@ -8,4 +8,5 @@
 
 # Questions 
 
-- Value to the organization
+- Value to the organization of providing loans 
+- Weighting fitness beyond ROI

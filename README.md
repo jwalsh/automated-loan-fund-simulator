@@ -20,3 +20,7 @@
 
 - Blockchain and Identity
 - Self-Sovereign Identity
+
+# _Blockchain Border Bank_ Implementation 
+
+- Create ID with Blockstack
