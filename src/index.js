@@ -72,6 +72,7 @@ var ledger = 'ledger/';  // GitHub
 // Model and Configuration
 app.bank.name = process.env.ALE_COMPANY || faker.company.companyName() + ' Bank';
 app.bank.taxid = process.env.ALE_LOAN_ACCESS_KEY || faker.finance.account();
+app.bank.spread = 0;
 
 var accountSecret = process.env.ALE_LOAN_ACCESS_SECRET;
 var paypal = process.env.ALE_PAYPAL_KEY;
