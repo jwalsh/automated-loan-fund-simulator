@@ -1,0 +1,41 @@
+{
+  "@context": "http://schema.org/",
+  "@type": "Person",
+  "givenName": "Jason",
+  "familyName": "Walsh",
+  "description": "",
+  "image": [
+    {
+      "@type": "ImageObject",
+      "name": "avatar",
+      "contentUrl": "https://s3.amazonaws.com/___/jwalsh"
+    }
+  ],
+  "website": [
+    {
+      "@type": "WebSite",
+      "url": "wal.sh"
+    }
+  ],
+  "account": [
+    {
+      "@type": "Account",
+      "service": "facebook",
+      "identifier": "jwalsh.sandbox",
+      "proofType": "http",
+      "proofUrl": "https://facebook.com/jwalsh.sandbox/posts/___"
+    }
+  ],
+  "worksFor": [
+    {
+      "@type": "Organization",
+      "@id": "defrecord.corp"
+    }
+  ],
+  "knows": [
+    {
+      "@type": "Person",
+      "@id": "___.id"
+    }
+  ]
+}

@@ -24,3 +24,5 @@
 # _Blockchain Border Bank_ Implementation 
 
 - Create ID with Blockstack
+
+- Paypal
