@@ -21,6 +21,9 @@ We're looking at extending a login based system
 - User: Create mock users 
 - Move through time at 1h every 1s
 - Loan: Users request and Entity accepts or denies
+- User Data as encrypted 
+  http://enigma.media.mit.edu/
+
 
 # Questions 
 
