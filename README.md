@@ -1,4 +1,4 @@
-# Informal Economic Models / (Blockchain Border Bank)[http://law.mit.edu/blockchainborderbank]
+# Informal Economic Models / [Blockchain Border Bank](http://law.mit.edu/blockchainborderbank)
 
 
 - Small scale simulations for location and loans 
