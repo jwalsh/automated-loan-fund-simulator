@@ -7,6 +7,19 @@ Simulation of Bank Entity and User events for Loans.
 - Rate of Return
 - Subsidized lending
 
+# Setup 
+
+- Sign up for a sandbox PayPal account 
+  https://www.sandbox.paypal.com/signup/account
+- Export PayPal client variables
+
+``` sh
+export PAYPAL_CLIENT_ID=xxxxxxxxxxxxxxxxxx
+export PAYPAL_CLIENT_SECRET=xxxxxxxxxxxxxxxxxx
+```  
+
+# Scope 
+
 ## Originization 
 
 ## Disbursement 
