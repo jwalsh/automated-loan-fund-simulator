@@ -2,10 +2,13 @@
 
 Simulation of Bank Entity and User events for Loans. 
 
+- Request
+- Processing 
+- Disbursement
 - Recoveries 
 - Colections 
 - Rate of Return
-- Subsidized lending
+- Subsidized Lending
 
 # Setup 
 
