@@ -1,0 +1,17 @@
+#!/bin/sh
+# Create sample entries for the ledger
+
+BASE=ledger
+FILE=$BASE/ledger.csv
+
+mkdir -p $BASE
+
+TIMESTAMP=`date +%s`
+LOANER_ID=alf.ids
+USER_ID=jwalsh.id
+ACTIVITY=LOAN
+AMOUNT=5
+
+ENTRY_TEMPLATE="$TIMESTAMP,$LOANER_ID,$USER_ID,$ACTIVITY,$AMOUNT"
+
+echo $ENTRY_TEMPLATE

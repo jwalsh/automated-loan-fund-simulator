@@ -1,7 +1,7 @@
 {
-  "name": "@jwalsh/automated-legal-entity",
+  "name": "@jwalsh/automated-loan-fund",
   "version": "0.0.1",
-  "description": "Simulator for Agents in an Automated Legal Entity",
+  "description": "Automated Loan Fund",
   "main": "src/index.js",
   "scripts": {
     "start": "./node_modules/.bin/babel-node src/index.js",
