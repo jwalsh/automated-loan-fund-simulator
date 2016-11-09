@@ -1,42 +1,30 @@
 {
-  "name": "@jwalsh/automated-loan-fund",
+  "name": "jwalsh-automated-loan-fund",
   "version": "0.0.1",
-  "description": "Automated Loan Fund",
-  "main": "src/index.js",
+  "description": "A react-server instance",
+  "main": "HelloWorld.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node src/index.js",
-    "test": "node test/index.js"
+    "start": "react-server start",
+    "lint": "eslint test.js pages",
+    "test": "npm run lint && nsp check && ava test.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jwalsh/ael-simulator.git"
-  },
-  "keywords": [
-    "markov",
-    "simulator",
-    "law",
-    "legal"
-  ],
-  "author": "Jason Walsh <j@wal.sh>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jwalsh/ael-simulator/issues"
-  },
-  "homepage": "https://github.com/jwalsh/ael-simulator#readme",
+  "license": "Apache-2.0",
   "dependencies": {
-    "@jwalsh/stochastic": "^0.1.3",
-    "babel-cli": "^6.16.0",
-    "bitcoinjs-lib": "^2.3.0",
-    "blockstack-auth": "^0.1.0",
-    "faker": "^3.1.0",
-    "lodash.sample": "^4.2.1",
-    "paypal-rest-sdk": "^1.7.0",
-    "redux": "^3.6.0",
-    "redux-devtools": "^3.3.1",
-    "ripple-lib": "^0.17.3",
-    "stripe": "^4.12.0"
+    "babel-preset-react-server": "^0.3.3",
+    "babel-runtime": "^6.6.1",
+    "react": "~0.14.2",
+    "react-dom": "~0.14.2",
+    "react-server": "^0.4.6",
+    "react-server-cli": "^0.4.6",
+    "superagent": "1.8.4",
+    "webpack-dev-server": "^1.16.2"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.16.0"
+    "ava": "^0.15.1",
+    "babel-eslint": "^6.1.2",
+    "eslint": "3.2.2",
+    "eslint-plugin-react": "6.0.0",
+    "nsp": "^2.3.3",
+    "react-hot-loader": "^3.0.0-beta.6"
   }
 }
